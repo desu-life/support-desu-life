@@ -1,0 +1,28 @@
+---
+import Layout from '@/layouts/default/index.astro';
+import { Content } from "@/content/data/about.mdx"
+
+---
+
+<head>
+    <meta charset="UTF-8" />
+    <title>公司介绍 | Kagami Studio 支持</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+
+<Layout>
+    <div class="about-container">
+        <div class="prose dark:prose-invert w-[60vw] max-w-none">
+            <Content />
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .about-container {
+        width: 70vw;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+</style>

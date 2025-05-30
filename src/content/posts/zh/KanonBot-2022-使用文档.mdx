@@ -1,0 +1,219 @@
+---
+title: "KanonBot 2022 使用文档"
+description: "本文档基于 2022 年版本编写，适用于 Kagami Studio(DESU.Life) 使用的 KanonBot 机器人。"
+slug: 2022-kanonbot-usage-doc
+cover: /images/posts/2022-kanonbot-usage-doc/cover.jpeg
+top_img: /images/posts/2022-kanonbot-usage-doc/top_img.jpeg
+date: 2022-10-23 03:15
+---
+
+import Note from "@/components/markdown/Note.svelte";
+import { panel_default_config } from "@/content/data/panel_default_config";
+
+{/* prettier-ignore */}
+<Note style="flat" type="warning" client:visible>
+  使用过程中请遵守 [DESU.Life 最终用户使用许可协议（EULA）](https://desu.life/eula)
+  指令系统已启用严格模式
+  !command [arg1] [arg2] ✅
+  !command[arg1][arg2] ❌
+</Note>
+
+# KanonBot 2022 使用文档
+
+本文档基于 2022 年版本编写，适用于 Kagami Studio(DESU.Life) 使用的 KanonBot 机器人。
+
+## 账户注册与绑定
+
+### 账户注册
+
+- 指令：`!reg example@desu.life`
+- 功能：注册并绑定邮箱账号，系统将发送一封验证邮件至该邮箱，点击邮件中的链接即可完成注册。
+
+### 多平台绑定
+
+- 在其他平台重复使用 `!reg` 指令会自动判定为绑定现有账户，而不是重新注册
+
+### 绑定 osu! 账号
+
+- 指令：`!bind osu <用户名>`
+
+## 指令系统
+
+> `[]` 为可选参数; `<>` 为必填参数; `&` 为输出高分辨率图像
+
+### osu! 主要信息查询
+
+| 指令          | 参数                                | 说明                     |
+| ------------- | ----------------------------------- | ------------------------ |
+| !info         | `<name>[]:<mode>[][&]`              | 查询个人资料             |
+| !recent / !re | `<name>[]:<mode>[]#<num>[&]`        | 查询最近游玩的成绩       |
+| !pr           | `<name>[]:<mode>[]#<num>[&]`        | 查询最近游玩并通过的成绩 |
+| !bp           | `<name>[]:<mode>[]#<num>[&]`        | 查询 best performance    |
+| !score        | `<name>#<bid>:<mode>[]+<mods>[][&]` | 查询某张图的成绩         |
+| !ppvs         | `<name>#<name>[][&]`                | 对比 pp+ 数据            |
+| !set osumode  | `<mode>`                            | 设置默认查询的模式       |
+
+### osu! 其他信息查询
+
+| 指令              | 参数格式                        | 说明                                          |
+| ----------------- | ------------------------------- | --------------------------------------------- |
+| !get bonuspp      | 无                              | 查询自己的奖励 pp 值                          |
+| !get rolecost     | `<name>[]`                      | 查询自己/他人在某项赛事中的 cost 值           |
+| !get bpht         | 无                              | 查询自己 bp 头尾差值                          |
+| !get todaybp      | 无                              | 查询今日新增的 bp                             |
+| !get seasonalpass | 无                              | 查询自己的季票信息                            |
+| !get recommend    | `<mods>[]`                      | 让猫猫推荐谱面，仅支持 std 模式               |
+| !get mu/profile   | 无                              | 输出 osu! 个人资料链接                        |
+| !get bplist       | `<num> / <indexnum>-<indexnum>` | 输出指定范围的 bp 列表                        |
+| !leeway / !lc     | `<bid>[] + <mods>[]`            | 计算最近游玩或指定图的容错率与理论分数（std） |
+
+季票系统说明（pt 机制）
+
+**基本规则**
+
+- 每季度：从首月 1 日开始，至末月最后一日 20:00 结算
+- 使用 `!pr` 查询将自动回溯过去 25 张通过谱面
+- 不计入 Failed 谱面
+- 计算维度包括：星级、长度、mod、Combo、评级、Acc 等综合表现
+
+**勋章获取等级**
+
+| 模式                | 勋章门槛 |
+| ------------------- | -------- |
+| std                 | 30 级    |
+| taiko / mania / ctb | 15 级    |
+
+### KanonBot 勋章
+
+| 指令          | 参数格式                    | 说明                                      |
+| ------------- | --------------------------- | ----------------------------------------- |
+| !badge list   | 无                          | 获取你所拥有的勋章列表                    |
+| !badge info   | `<num>`                     | 获取指定勋章的详细信息                    |
+| !badge set    | `<num> / <num,num,num,num>` | 将指定勋章显示在个人资料页（\*-1 为取消） |
+| !badge redeem | `<code>`                    | 兑换徽章                                  |
+
+#### 面板勋章规则
+
+- **v2 面板**：顶部最多展示 5 枚，底部最多展示 14 枚徽章；支持空位（除 1 号位）
+- **v1 面板**：最多支持展示 5 枚徽章；不支持空位，直接跳过
+
+#### 勋章申请说明
+
+- **可申请对象**：比赛（含群赛/锦标赛/友谊赛）、战队家族（Clan 前缀）、纪念用途
+- **申请需提交**：完整赛程表、参赛名单、战队列表
+- **图像要求**：使用模板图并严格按说明编辑，最小徽章尺寸，支持等比缩放
+- **注意事项**：2023/08/04 起，仅 staff 与正赛选手可获得比赛类徽章
+
+### 面板/图像自定义系统
+
+| 指令                           | 参数格式                     | 说明                                                      |
+| ------------------------------ | ---------------------------- | --------------------------------------------------------- |
+| !set osuinfopanelversion       | `<1/2>`                      | 设置 `osu!infopanel` 版本                                 |
+| !set osuinfopanelv1img         | `<url>` / `reset` / `delete` | 设置 / 删除 `panelv1` 的自定义图像                        |
+| !set osuinfopanelv2img         | `<url>` / `reset` / `delete` | 设置 / 删除 `panelv2` 的自定义图像                        |
+| !set osuinfopanelv1panel       | `<url>` / `reset` / `delete` | 设置 / 删除 `panelv1` 的自定义面板                        |
+| !set osuinfopanelv2panel       | `<url>` / `reset` / `delete` | 设置 / 删除 `panelv2` 的自定义面板                        |
+| !set osuinfopanelv2colormode   | `<0/1/2>`                    | 设置 `panelv2` 的配色模式：`0=自定义`，`1=亮色`，`2=暗色` |
+| !set osuinfopanelv2colorcustom | `<config_text>`              | 设置 `panelv2` 的自定义配色配置文本                       |
+
+建议参考官方模板说明进行配色与图像设置，避免显示异常。
+
+#### 配色默认配置
+
+<details>
+  <summary>Light</summary>
+  <pre>
+    <code>{panel_default_config.light}</code>
+  </pre>
+</details>
+<details>
+  <summary>Dark</summary>
+  <pre>
+    <code>{panel_default_config.dark}</code>
+  </pre>
+</details>
+
+## Bot 实例部署文档
+
+### 基础环境说明
+
+#### 支持客户端
+
+- **首选推荐**：[go-cqhttp](https://github.com/Mrs4s/go-cqhttp)（基于 OneBot v11 协议）
+- **兼容提示**：其他支持 OneBot v11 协议的客户端理论上也可以接入，但不保证兼容性
+
+#### 通信协议要求
+
+- 使用 `ws-reverse` 模式进行连接
+- 地址统一为 `ws://botws.desu.life:65000`
+
+### 配置文件实例
+
+#### config.yml 关键片段
+
+```yaml
+servers:
+  - ws-reverse:
+      universal: ws://botws.desu.life:65000
+      reconnect-interval: 3000
+      middlewares:
+        <<: *default
+
+# 注意：YAML 缩进需严格遵守
+```
+
+#### 默认中间件锚点定义
+
+```yaml
+default-middlewares: &default
+  filter: "filter.json"
+```
+
+### 事件过滤器配置
+
+<Note style="flat" type="info" client:visible>
+  强烈建议开启[事件过滤器](https://docs.go-cqhttp.org/guide/eventfilter.html)，以减少服务器负载
+</Note>
+
+#### filter.json 配置
+
+```json
+{
+  ".or": [
+    { "post_type": "meta_event" },
+    {
+      "raw_message": {
+        ".or": [{ ".regex": "^!" }, { ".regex": "^！" }, { ".regex": "^/" }]
+      }
+    }
+  ]
+}
+```
+
+此过滤器可以配置:
+
+- 指定群聊的消息上报
+- 排除特定群聊的消息上报
+- 指定用户的消息上报
+- 排除特定用户的消息上报
+
+### 格式兼容设置
+
+#### go-cqhttp 消息格式要求
+
+```yaml
+message:
+  post-format: array
+```
+
+若为旧版本实例，请务必修改此项，否则 Bot 无法正常处理消息内容
+
+## 注意事项与支持渠道
+
+使用中如遇问题，请优先加入 [Discord 服务器](https://discord.gg/eGAm24FjQ8) 反馈
+
+若无法访问 Discord，可邮件联系 [admin@desu.life](mailto:admin@desu.life)
+
+感谢所有 Bot 实例维护者为 desu.life 社区做出的贡献！
+
+如需更新更多文档，请配合官方 GitHub 仓库或提交 Issue 获取帮助。

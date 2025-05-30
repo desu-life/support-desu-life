@@ -1,0 +1,59 @@
+---
+import Layout from "@/layouts/default/index.astro";
+import SearchContent from "@/components/sections/SearchContent.svelte";
+import { getCollection } from "astro:content";
+import { extractMdxText } from "@/utils/extractMdxText";
+
+interface SearchItem {
+    id: string;
+    title: string;
+    type: 'post' | 'firmware';
+    slug?: string;
+    content?: string;
+    description?: string;
+    device?: string;
+    version?: string;
+}
+
+const posts = await getCollection("posts");
+const firmware = await getCollection("firmware");
+
+const searchData: SearchItem[] = [
+    ...posts.map((post) => ({
+        id: post.id,
+        title: post.data.title,
+        type: "post" as const,
+        slug: post.data.slug,
+        content: extractMdxText(post.body),
+        description: post.data.description,
+    })),
+    ...firmware.map((firmware) => ({
+        id: firmware.id,
+        title: firmware.data.label,
+        type: "firmware" as const,
+        device: firmware.data.device,
+        version: firmware.data.version,
+    }))
+];
+---
+
+<head>
+    <meta charset="UTF-8" />
+    <title>搜索 | Kagami Studio 支持</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+
+<Layout>
+    <div class="search-container">
+        <SearchContent data={searchData} client:load />
+    </div>
+</Layout>
+
+<style>
+    .search-container {
+        width: 80vw;
+        height: 100%;
+        margin: 0 auto;
+    }
+</style>

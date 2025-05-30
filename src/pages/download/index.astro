@@ -1,0 +1,97 @@
+---
+import Layout from "@/layouts/default/index.astro"
+import DownloadBanner from "@/components/sections/DownloadBanner.astro"
+import SearchFirmware from "@/components/common/SearchFirmware.svelte"
+
+
+import { getCollection } from "astro:content";
+const firmware = await getCollection("firmware");
+---
+
+<head>
+    <title>下载 | Kagami Studio 支持</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+
+<Layout>
+    <div class="download-container">
+        <div class="download-container__card">
+            <DownloadBanner />
+        </div>
+        <div class="download-container__card">
+            <h2>固件下载</h2>
+            <div class="search-firmware">
+                <SearchFirmware data={firmware.map((item) => ({
+                    id: item.id,
+                    label: item.data.label,
+                    device: item.data.device,
+                    version: item.data.version,
+                }))} client:load />
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .download-container {
+        width: clamp(80vw, 80%, 1200px);
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .download-container__card {
+        border-radius: 1rem;
+        padding: 2rem;
+        border: 1px solid #fff1;
+    }
+    :global(.download-banner__header) {
+        display: none;
+    }
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .search-firmware {
+        width: 100%;
+        padding: 1rem 0;
+    }
+
+
+    @media screen and (max-width: 1200px) {
+        .download-container {
+            width: 90vw;
+        }
+    }
+    /* 响应式样式 */
+    @media screen and (max-width: 900px) {
+        .download-container {
+            width: 90vw;
+        }
+        .download-container__card {
+            padding: 1.5rem;
+        }
+        h2 {
+            font-size: 1.3rem;
+        }
+    }
+
+    @media screen and (max-width: 600px) {
+        .download-container {
+            width: 90vw;
+            gap: 1rem;
+        }
+        .download-container__card {
+            padding: 1rem;
+        }
+        h2 {
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .search-firmware {
+            padding: 0.5rem 0;
+        }
+    }
+</style>

@@ -1,0 +1,47 @@
+---
+import Layout from '@/layouts/default/index.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+    const products = await getCollection('products');
+    return products.map((product) => {
+        const slug = product.data.slug;
+        let id: string;
+
+        if (slug) {
+            id = slug;
+        } else {
+            const raw = product.id;
+            id = raw.split('/').pop()?.split('.')[0] ?? raw;
+        }
+
+        return {
+            params: { id },
+            props: { product },
+        };
+    });
+}
+const { product } = Astro.props;
+const { Content } = await render(product);
+---
+
+<head>
+    <meta charset="UTF-8" />
+    <title>{product.data.title} | Kagami Studio 支持</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+
+<Layout>
+    <div class="product-content">
+        <Content />
+    </div>
+</Layout>
+
+<style>
+    .product-content {
+        width: 80vw;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+</style>

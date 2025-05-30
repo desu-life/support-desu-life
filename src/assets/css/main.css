@@ -1,0 +1,8 @@
+@import "./color.css";
+@import "./tailwind.css";
+
+:root {
+    color: var(--color-text);
+    background-color: var(--color-background);
+    
+}

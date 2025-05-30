@@ -1,0 +1,316 @@
+---
+import { Icon } from "astro-icon/components";
+import MPCImage from "@/assets/images/MPC.jpeg";
+import Dropdown from "@/components/common/Dropdown.svelte";
+---
+
+<div class="download-banner">
+  <div class="download-banner__header">
+    <h1 class="download-banner__main-title">下载 Kagami Studio 硬件配置器</h1>
+    <div class="download-banner__subtitle">
+      * 支持 Meowpad v1 之后发售的所有产品
+    </div>
+  </div>
+  <div class="download-banner__content-row">
+    <!-- 左侧图片 -->
+    <div class="download-banner__left">
+      <img
+        class="download-banner__image"
+        src={MPCImage.src}
+        alt="MPC 配置器截图"
+      />
+    </div>
+    <!-- 右侧内容 -->
+    <div class="download-banner__right">
+      <div>
+        <h2 class="download-banner__title">MPC - 磁轴键盘配置器</h2>
+        <div class="download-banner__desc">
+          配置简单，几步搞定<br>
+          支持多产品，一套配置器打通所有设备
+        </div>
+      </div>
+      <!-- 特性 -->
+      <div class="download-banner__features">
+        <div class="download-banner__feature">
+          <Icon name="solar:programming-linear" size="32" />
+          <span>全设备通用</span>
+        </div>
+        <div class="download-banner__feature">
+          <Icon name="solar:settings-linear" size="32" />
+          <span>高度自定义</span>
+        </div>
+        <div class="download-banner__feature">
+          <Icon name="solar:keyboard-linear" size="32" />
+          <span>Fn层配置</span>
+        </div>
+      </div>
+      <!-- 下载按钮 -->
+      <div class="download-banner__buttons">
+        <a
+          class="download-banner__button"
+          href="https://assets.desu.life/device/app/resources/MeowpadConfiguratorForV2_v1.0.3_windows.msi"
+          target="_blank"
+        >
+          <Icon name="devicon:windows11" size="24" /> Windows
+        </a>
+        <Dropdown dropdownTrigger="hover" client:load>
+          <div slot="trigger" class="download-banner__button">
+            <Icon name="bi:apple" size="24" /> MacOS
+          </div>
+          <ul slot="menu" class="dropdown-list">
+            <a
+              href="https://assets.desu.life/device/app/resources/MeowpadConfiguratorForV2_v1.0.3_macos.dmg"
+              target="_blank"><li>DMG 安装包</li></a
+            >
+            <a
+              href="https://assets.desu.life/device/app/resources/MeowpadConfiguratorForV2_v1.0.3_macos_app.zip"
+              target="_blank"><li>APP (便携版)</li></a
+            >
+          </ul>
+        </Dropdown>
+        <Dropdown dropdownTrigger="hover" client:load>
+          <div slot="trigger" class="download-banner__button">
+            <Icon name="devicon:linux" size="24" /> Linux
+          </div>
+          <ul slot="menu" class="dropdown-list">
+            <a
+              href="https://assets.desu.life/device/app/resources/MeowpadConfiguratorForV2_v1.0.3_linux_deb.zip"
+              target="_blank"><li>DEB 包</li></a
+            >
+            <a
+              href="https://assets.desu.life/device/app/resources/MeowpadConfiguratorForV2_v1.0.3_linux.AppImage"
+              target="_blank"><li>AppImage</li></a
+            >
+          </ul>
+        </Dropdown>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .download-banner {
+    padding: 6rem 1.5rem;
+    max-width: 60vw;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .download-banner__header {
+    margin-bottom: 2.5rem;
+    text-align: left;
+  }
+  .download-banner__main-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  .download-banner__subtitle {
+    font-size: 1rem;
+    color: #bbb;
+    margin-left: 2px;
+    text-align: center;
+  }
+  .download-banner__content-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+  }
+  .download-banner__left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .download-banner__image {
+    border-radius: 16px;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
+    width: clamp(400px, 40%, 480px);
+    min-width: 400px;
+    background: #222;
+  }
+  .download-banner__right {
+    flex: 1.2;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .download-banner__title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  .download-banner__desc {
+    font-size: 0.98rem;
+    line-height: 1.8;
+    color: #eee;
+  }
+  .download-banner__features {
+    display: flex;
+    gap: 24px;
+    margin-top: 6px;
+  }
+  .download-banner__feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.92rem;
+  }
+  .download-banner__buttons {
+    display: flex;
+    gap: 18px;
+    margin-top: 12px;
+  }
+  .download-banner__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.7rem;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 9px 22px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transition: background 0.2s;
+    min-width: 150px;
+  }
+  .download-banner__button:hover {
+    background: #444;
+  }
+  .dropdown-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-background-secondary, #242424);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    min-width: 150px;
+  }
+  .dropdown-list a {
+    text-decoration: none;
+    color: var(--color-text-primary, #fff);
+    transition: color 0.2s ease;
+  }
+  .dropdown-list li {
+    padding: 0.75rem 1.25rem;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--color-border, #333);
+  }
+  .dropdown-list li:last-child {
+    border-bottom: none;
+  }
+  .dropdown-list li:hover {
+    background: var(--color-background-hover, #444);
+  }
+  .dropdown-list li:hover a {
+    color: var(--color-primary, #3b82f6);
+  }
+
+  @media (max-width: 1200px) {
+    .download-banner {
+      /* padding: 2.5rem 0.5rem; */
+      max-width: 80vw;
+    }
+    .download-banner__main-title {
+      font-size: 1.7rem;
+    }
+    .download-banner__desc {
+      padding: 0 1rem;
+    }
+    .download-banner__content-row {
+      gap: 2rem;
+      flex-direction: column;
+    }
+    .download-banner__image {
+      /* max-width: 180px; */
+    }
+    .download-banner__right {
+      gap: 18px;
+      text-align: center;
+    }
+    .download-banner__title {
+      text-align: center;
+    }
+    .download-banner__features {
+      gap: 14px;
+      justify-content: space-around;
+    }
+    .download-banner__buttons {
+      gap: 10px;
+      justify-content: space-around;
+    }
+    .download-banner__button {
+      min-width: 180px;
+    }
+  }
+  @media (max-width: 600px) {
+    .download-banner {
+      padding: 6rem 0;
+      max-width: 80vw;
+    }
+    .download-banner__main-title {
+      font-size: 1.1rem;
+    }
+    .download-banner__subtitle {
+      font-size: 0.85rem;
+    }
+    .download-banner__content-row {
+      gap: 1rem;
+      flex-direction: column;
+    }
+    .download-banner__right {
+      gap: 1rem;
+    }
+    .download-banner__feature {
+      flex-direction: row;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .download-banner__buttons {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+      width: 300px;
+      margin: 0 auto;
+      margin-top: 1rem;
+    }
+    .download-banner__button {
+      justify-content: center;
+      width: 300px;
+      font-size: 0.95rem;
+      padding: 8px 0;
+    }
+    .download-banner__image {
+      max-width: 98vw;
+      min-width: 0;
+    }
+    .download-banner__header {
+      margin-bottom: 1.2rem;
+    }
+    .dropdown-list {
+      width: 100%;
+      min-width: unset;
+    }
+    :global(.dropdown-menu) {
+      width: 100%;
+    }
+  }
+</style>

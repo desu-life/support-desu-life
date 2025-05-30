@@ -1,0 +1,51 @@
+:root {
+    --color-primary: #63E2B7;
+    --color-primary-click: #59CBA4;
+    --color-primary-hover: #77F9CB;
+    --color-primary-disabled: #95DBB750;
+
+    --color-secondary: #4DACEE;
+    --color-secondary-click: #459BD6;
+    --color-secondary-hover: #61BFFF;
+    --color-secondary-disabled: #75BFFF50;
+
+    --color-tertiary: #FFC400;
+    --color-tertiary-click: #E6B000;
+    --color-tertiary-hover: #FFD833;
+    --color-tertiary-disabled: #FFC40050;
+
+    --color-natural: #CCC;
+    --color-natural-click: #B8B8B8;
+    --color-natural-hover: #E0E0E0;
+    --color-natural-disabled: #CCCCCC50;
+
+    --color-successful: #4CAF50;
+    --color-successful-click: #429B46;
+    --color-successful-hover: #60C35B;
+    --color-successful-disabled: #74AF5B50;
+
+    --color-warning: #FFEB3B;
+    --color-warning-click: #E6D42C;
+    --color-warning-hover: #FFF55A;
+    --color-warning-disabled: #FFEB3B50;
+
+    --color-danger: #F44336;
+    --color-danger-click: #DC3D31;
+    --color-danger-hover: #F46154;
+    --color-danger-disabled: #F4433650;
+
+    --color-background: #181818;
+    --color-background-secondary: #242424; 
+    --color-background-code: #242424;
+    --color-text: #FFF;
+    --color-text-primary: #FFF;
+    --color-text-secondary: #CCC;
+
+    --color-button-primary: #4DACEE;
+    --color-button-primary-hover: #61BFFF;
+    --color-button-primary-disabled: #75BFFF50;
+
+    --color-button-secondary: #303030;
+    --color-button-secondary-hover: #404040;
+    --color-button-secondary-disabled: #A4A4A4;
+}
