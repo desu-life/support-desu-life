@@ -1,48 +1,53 @@
-# Astro Starter Kit: Basics
+# Kagami Studio Support
 
-```sh
-pnpm create astro@latest -- --template basics
+这是 Kagami Studio 的支持站点，原 DESU.Life 帮助站的升级版本。本站点集成了资讯、下载等功能，为用户提供全面的支持服务。
+
+## 功能特点
+
+- 📰 资讯中心：获取最新的项目动态和更新信息
+- 📥 下载服务：提供软件、资源等下载服务
+- 💡 帮助文档：详细的使用说明和常见问题解答
+- 🎨 现代化界面：采用现代化的设计，提供良好的用户体验
+
+## 技术栈
+
+- [Astro](https://astro.build/) - 现代化的静态站点生成器
+- [Svelte](https://svelte.dev/) - 用于构建用户界面的现代框架
+- [Vue](https://vuejs.org/) - 渐进式 JavaScript 框架
+- [TailwindCSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
+- [TypeScript](https://www.typescriptlang.org/) - JavaScript 的超集，提供类型系统
+
+## 开发环境设置
+
+1. 克隆仓库
+```bash
+git clone https://github.com/desu-life/support-desu-life.git
+cd support-desu-life
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+2. 安装依赖
+```bash
+pnpm install
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+3. 启动开发服务器
+```bash
+pnpm dev
+```
 
-## 🧞 Commands
+4. 构建生产版本
+```bash
+pnpm build
+```
 
-All commands are run from the root of the project, from a terminal:
+## 项目结构
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+```
+support-desu-life/
+├── src/            # 源代码目录
+├── public/         # 静态资源
+├── .astro/         # Astro 配置
+├── dist/           # 构建输出目录
+└── scaffold/       # 项目脚手架
+```
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
