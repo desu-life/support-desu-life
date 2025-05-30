@@ -28,8 +28,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Generate Fonts
-        run: pnpm run prepare-fonts
+      # - name: Generate Fonts
+      #   run: pnpm run prepare-fonts
 
       - name: Build project
         run: pnpm run build
