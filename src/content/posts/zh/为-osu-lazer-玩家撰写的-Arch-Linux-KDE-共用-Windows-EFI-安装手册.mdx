@@ -1,0 +1,610 @@
+---
+title: 为 osu!lazer 玩家撰写的 Arch Linux + KDE + 共用 Windows EFI 安装手册
+slug: arch-linux-kde-guide
+cover: /images/posts/arch-linux-kde-guide/cover.jpeg
+top_img: /images/posts/arch-linux-kde-guide/top_img.jpeg
+date: 2025-05-31 12:00
+description: 适用于：已存在 Windows 系统、EFI 分区保留、使用 LVM 安装 Arch Linux 并使用 KDE 桌面环境
+---
+
+import Note from '@/components/markdown/Note.svelte'
+
+# 为 osu!lazer 玩家撰写的 Arch Linux + KDE + 共用 Windows EFI 安装手册
+
+> 适用于：已存在 Windows 系统、EFI 分区保留、使用 LVM 安装 Arch Linux 并使用 KDE 桌面环境
+
+---
+
+<Note type="danger" style="flat" client:visible>
+本手册不包含准备分区内容，请自行使用PE分割现有分区或使用全新硬盘
+</Note>
+
+<Note type="warning" style="flat" client:visible>
+本手册不会详细解释每个步骤的作用，请自行查阅。
+</Note>
+
+---
+
+## 💽 前提准备
+
+- 已制作 Arch Linux 官方 ISO 的 U 盘（UEFI 启动）
+- 目标磁盘已分区（或你会用 fdisk/gdisk 分区）
+- EFI 分区存在（通常是 `/dev/nvme0n1p1`，FAT32，**不格式化**）
+- 有网络（Wi-Fi 建议使用 `iwctl` 连接）
+
+---
+
+## 🧰 第一步：LVM 设置
+
+```bash
+加载LVM模块
+modprobe dm-mod
+
+创建物理卷
+pvcreate /dev/nvme0n1p2
+
+创建LVG卷组
+vgcreate archvg /dev/nvme0n1p2
+
+创建root逻辑卷
+lvcreate -L 60G -n root archvg
+
+创建swap逻辑卷
+lvcreate -L 8G  -n swap archvg
+
+将剩余空间分配给home卷
+lvcreate -l 100%FREE -n home archvg
+
+格式化
+mkfs.ext4 /dev/archvg/root
+mkfs.ext4 /dev/archvg/home
+mkswap /dev/archvg/swap
+```
+
+如是 **重装系统但保留原 LVM**，可直接激活旧卷组：
+
+```bash
+扫描已存在的卷组
+vgscan
+
+激活已存在的卷组
+vgchange -ay
+
+格式化已有逻辑卷
+mkfs.ext4 /dev/archvg/root
+```
+
+---
+
+## 📂 第二步：挂载分区
+
+```bash
+mount /dev/archvg/root /mnt
+mkdir /mnt/{boot,home}
+
+mount /dev/archvg/home /mnt/home
+mkdir -p /mnt/boot/efi
+
+mount /dev/nvme0n1p1 /mnt/boot/efi
+
+swapon /dev/archvg/swap
+```
+
+<Note type="warning" style="flat" client:visible>
+ `/boot/efi` 应该对应 EFI 分区根目录，而不是其中的 `/EFI` 子目录，否则 `grub-install` 会失败！
+</Note>
+
+---
+
+## 📦 第三步：安装基本系统
+
+```bash
+pacstrap -K /mnt base linux linux-firmware sudo vim networkmanager grub efibootmgr lvm2 os-prober
+```
+
+---
+
+## 🔧 第四步：生成 fstab
+
+```bash
+genfstab -U /mnt >> /mnt/etc/fstab
+```
+
+<Note type="warning" style="flat" client:visible>
+每次修改或重挂载 `/mnt` 内的结构（如新增挂载 `/boot/efi`）都需要重新 `genfstab`。
+</Note>
+
+---
+
+## 🛠️ 第五步：基本配置
+
+```bash
+进入主系统
+arch-chroot /mnt
+
+启动网络管理器
+systemctl enable NetworkManager
+
+修改时区
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+hwclock --systohc
+
+添加本地化内容
+nano /etc/locale.gen
+然后将"en_US.UTF-8 UTF-8"取消注释
+
+生成本地化内容
+locale-gen
+
+nano /etc/locale.conf
+设置系统语言"LANG=en_US.UTF-8"
+
+nano /etc/hostname
+设置主机名"arch-xxx"
+
+nano /etc/hosts
+添加行"127.0.1.1 arch-xxx.localdomain arch-xxx"
+
+设置root密码
+passwd
+
+添加用户
+useradd -m -G wheel -s /bin/bash xxx
+passwd xxx
+
+允许sudoers
+nano /etc/sudoers
+将"%wheel ALL=(ALL:ALL) ALL"取消注释
+
+配置initramfs(加lvm2)
+nano /etc/mkinitcpio.conf
+将HOOKS修改为：HOOKS=(base udev autodetect microcode modconf block lvm2 filesystems keyboard fsck)
+
+然后执行 mkinitcpio -P
+```
+
+---
+
+## 🧠 第六步：配置 GRUB
+
+```bash
+允许自动发现系统
+nano /etc/default/grub
+将'GRUB_DISABLE_OS_PROBER=false'取消注释
+
+安装引导程序
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArchLinux
+
+创建引导配置文件
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+<Note type="warning" style="flat" client:visible>
+ `grub-install` 会在 `/boot/efi/EFI/ArchLinux/grubx64.efi` 生成启动文件并绑定当前的 lvmid。重建 LVM 后必须重新执行！否则重启报错 `lvmid not found`。
+</Note>
+
+---
+
+## 🔁 注意事项
+
+- EFI 分区不要格式化，继续挂载到 `/mnt/boot/efi` ，否则Windows引导会丢失
+- 如果保留原有 LVM，执行：
+
+```bash
+vgscan
+vgchange -ay
+```
+
+- 如果重建 LVM，务必重新 `grub-install`
+- 一定要重新 `genfstab` 和 `grub-mkconfig`
+
+---
+
+## ✅ 收尾阶段
+
+```bash
+exit
+umount -R /mnt
+reboot
+然后拔掉U盘
+```
+
+---
+
+## 🖥️ 安装图形界面（KDE-plasma wayland）
+
+#### 安装基本界面
+
+```bash
+sudo pacman -S git base-devel
+
+sudo pacman -S plasma kde-applications xdg-desktop-portal-kde \
+qt5-wayland qt6-wayland sddm sddm-kcm noto-fonts-cjk adobe-source-han-sans-cn-fonts fcitx5-im fcitx5-chinese-addons fcitx5-configtool wqy-zenhei wqy-microhei noto-fonts-extra
+```
+
+#### 安装显卡驱动(没有的显卡就不要安装！)
+
+intel：
+
+```
+intel: 
+sudo pacman -S mesa vulkan-intel libva-intel-driver
+```
+
+nvidia：
+
+```
+sudo pacman -S nvidia nvidia-utils nvidia-settings
+
+启用kms（wayland）：
+sudo nano /etc/modprobe.d/nvidia.conf
+写入"options nvidia_drm modeset=1"
+
+添加内核启动参数：
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nvidia_drm.modeset=1"
+```
+
+更新GRUB/initramfs：
+
+```
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+sudo mkinitcpio -P
+```
+
+创建Repos/Apps/AppImages文件夹：
+
+```
+mkdir ~/{Repos,Apps,AppImages}
+```
+
+配置输入法：
+
+```
+mkdir -p ~/.config/environment.d
+nano ~/.config/environment.d/fcitx5.conf
+
+写入：
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+INPUT_METHOD=fcitx
+QT_QPA_PLATFORM=wayland
+GDK_BACKEND=wayland
+
+皮肤(Catppuccin)：
+cd ~/Repos && git clone https://github.com/catppuccin/fcitx5.git
+mkdir -p ~/.local/share/fcitx5/themes/
+bash ./Repos/fcitx5/enable-rounded.sh
+cp -r ./fcitx5/src/* ~/.local/share/fcitx5/themes
+
+或者在这里寻找自己喜欢的皮肤：
+https://github.com/topics/fcitx5-theme
+```
+
+<Note type="info" style="flat" client:visible>
+注意：即使在启动后fcitx5提示不要设置GTK_IM_MODULE&QT_IM_MODULE，但在实际使用中还是需要这两个配置，否则在chrome等应用程序中，输入法不会正常工作。
+</Note>
+
+---
+
+## 🔓 登录管理器（可选）
+
+```bash
+sudo pacman -S sddm
+sudo systemctl enable sddm
+```
+
+<Note type="warning" style="flat" client:visible>
+登录黑屏 → tty 中输入 `journalctl -xe` 排查
+</Note>
+
+<Note type="danger" style="flat" client:visible>
+在安装完显示驱动之前启动sddm是很危险的行为，不要这么做！
+</Note>
+
+---
+
+## 🪟 TTY 快速救援
+
+若图形黑屏：
+
+- 切换 TTY：`Ctrl + Alt + F2 ~ F6`
+- 登录后编辑配置或停用图形服务
+- 禁用 sddm：`sudo systemctl disable sddm` 
+
+---
+
+## 🖱️ 数位板无法被osu!lazer识别
+
+禁用hid_uclogic
+
+```
+sudo rmmod hid_uclogic 
+```
+
+---
+
+## 🧠 常用 yay 指令
+
+```bash
+yay -S <包名>     # 安装
+yay -R <包名>     # 卸载
+yay               # 更新全部
+```
+
+---
+
+## 💩 挂载NTFS分区
+
+```
+安装 ntfs-3g 包
+sudo pacman -S ntfs-3g
+
+创建挂载点（也可以直接/mnt/win_c,看个人喜好）
+sudo mkdir -p /mnt/win_volume/volume1
+
+手动挂载ntef分区
+（不建议执行，如执行了可用sudo umount -R /mnt/win_volume/volume1卸载）
+sudo mount -t ntfs-3g /dev/nvme0n1p3 /mnt/win_volume/volume1
+
+获取磁盘信息
+lsblk
+
+获取ntfs分区的UUID
+sudo blkid /dev/nvme0n1p3
+
+将其添加至自动挂载磁盘分区配置文件
+sudo nano /etc/fstab
+例：UUID=3AE67F64E67F1EF7  /mnt/win-c  ntfs-3g  defaults,noatime,uid=1000,gid=1000,umask=022  0  0
+
+挂载
+sudo mount -a
+```
+
+---
+
+## 🔈   优化PipieWire延迟（可选）
+
+```
+创建用户级配置文件
+mkdir -p ~/.config/pipewire/pipewire.conf.d
+nano ~/.config/pipewire/99-customized.conf.d/99-lowlatency.conf
+```
+
+将其写入（可根据自己需求更改）：
+
+```
+context.properties = {
+    # 音频采样率，常见标准为 48000Hz
+    default.clock.rate          = 48000
+
+    # 支持的其他采样率（动态切换用）
+    default.clock.allowed-rates = [ 44100 48000 96000 192000 ]
+
+    # 每个音频周期的帧数
+	# 64 帧 ≈ 1.33ms   32 帧 ≈ 0.67ms
+	# 越小越低延迟，但 CPU 负担越重，某些应用或驱动可能不支持太小。
+    default.clock.quantum       = 32
+	# 允许的最小量化帧数
+	# PipeWire 在动态适配硬件或应用时，不会低于这个值
+	# 举例：min = 32，那么系统至少用 32 帧，不会被拉低到更不稳定的 16 或 24
+    default.clock.min-quantum   = 32
+	# 允许的最大量化帧数 默认推荐128
+    default.clock.max-quantum   = 64
+	# 强制使用某个 quantum 值，无论设备或软件要求什么，无视之前设置的内容
+	# 默认不推荐设置它，除非你很明确地想锁定帧数
+    # default.clock.force-quantum = 64
+
+    # 实时调度优先级（需 rtkit 支持）
+    default.clock.priority      = 88
+
+    # 保持 CPU 高效，避免处理极小的浮点数带来性能抖动
+    cpu.zero.denormals          = true
+
+    # 控制 buffer 数量，16 是兼容 + 低延迟的好平衡
+    link.max-buffers            = 16
+
+    # 强化音频处理线程实时调度（与 rtkit 协同）
+    loop.rt-prio = -1
+    loop.class   = data.rt
+}
+```
+
+重启PipeWire：
+
+```
+systemctl --user daemon-reexec
+systemctl --user restart pipewire pipewire-pulse
+```
+
+<Note type="success" style="flat" client:visible>
+确认是否运行在RT下：
+
+ps -o pid,comm,rtprio,ni,cls,cmd -p $(pidof pipewire)
+
+确认 `RTPRIO` 是 88 且 `CLS` 是 `RR`，即为成功 ✅
+</Note>
+
+查看PipeWire状态：
+
+```
+pw-top
+pw-metadata
+```
+
+---
+
+## 🔊  更近一步的音频设置（可选）
+
+安装 `cpufrequtils` 
+
+```
+sudo pacman -S cpufrequtils
+sudo nano /etc/default/cpufrequtils
+```
+
+切换到performance模式
+
+```
+sudo cpufreq-set -g performance
+```
+
+添加以下内容：
+
+```
+GOVERNOR="performance"
+```
+
+启用并启动服务：
+
+```
+sudo systemctl enable cpufrequtils
+sudo systemctl start cpufrequtils
+```
+
+确认当前生效状态：
+
+```
+cpufreq-info
+```
+
+输出中应该显示：
+
+```
+current policy: frequency should be within ...
+The governor "performance" may decide which speed to use
+```
+
+或直接查看某个核心状态：
+
+```
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+```
+
+创建新的PipeWire用户级配置文件（保留之前的99-lowlatency.conf)：
+
+```
+~/.config/pipewire/pipewire.conf.d/20-proaudio.conf
+```
+
+写入以下内容：
+
+```
+context.num-data-loops = 1
+
+context.data-loops = [
+    {
+        loop.rt-prio = 88
+        loop.class = [ data.rt audio.rt ]
+        thread.name = data-loop.0
+        thread.affinity = [ 2 3 ]  # 将音频线程绑定到 CPU 2、3，避开主线程
+    }
+]
+
+context.properties = {
+    thread.affinity = [ 2 3 ]     # 主线程也绑定（冗余设定，有时需补充）
+}
+```
+
+---
+
+## 🎉 完成！
+
+<Note type="info" style="flat" client:visible>
+AppImage包管理器可以在KDE的软件中心中寻找Gear Lever
+</Note>
+
+<Note type="info" style="flat" client:visible>
+osu!lazer的运行文件夹可以在挂载NTFS分区后与windows版的运行文件夹共用
+</Note>
+
+---
+
+# 附录：
+
+## 😜  添加配置器或数位板支持
+
+用 `lsusb` 找到你的设备：
+
+```
+lsusb
+```
+
+输出可能像这样：
+
+```
+Bus 001 Device 008: ID 5d3e:fb01 desu.life Pure64
+```
+
+记住 **Vendor ID（5d3e）** 和 **Product ID（fb01）**
+
+创建udev规则文件（文件名可以自定义，但建议以 `99-` 开头）：
+
+```
+sudo nano /etc/udev/rules.d/99-myusb.rules
+```
+
+添加以下内容：
+
+```
+SUBSYSTEM=="usb", ATTR{idVendor}=="5d3e", ATTR{idProduct}=="fb01", MODE="0666"
+```
+
+如果你希望将设备归属于某个特定用户或组，也可以这样写：
+
+```
+SUBSYSTEM=="usb", ATTR{idVendor}=="5d3e", ATTR{idProduct}=="fb01", MODE="0660", GROUP="plugdev"
+```
+
+> ⚠️ `plugdev` 组不一定存在，可用 `id` 查看自己所属的组
+
+重新加载规则并插拔设备
+
+```
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
+然后 **重新插拔 USB 设备**。
+
+检测是否生效：
+
+```
+ls -l /dev/bus/usb/001/008
+```
+
+看权限是否是 `crw-rw-rw-` 或属于目标组。
+
+---
+
+## 😎  添加用户组（可选）
+
+添加一个新组：
+
+```
+sudo groupadd plugdev
+```
+
+如果组已经存在，会提示错误但不影响使用。
+
+把当前用户添加到该组：
+
+```
+sudo usermod -aG plugdev XXX
+```
+
+> 🔺 **注意**：`-aG` 是 “追加到附加组”，不能漏掉，否则会覆盖现有组！
+
+让更改生效：
+
+```
+newgrp plugdev
+```
+
+验证是否加入成功
+
+```
+groups
+```
+
+你应该能看到 `plugdev` 出现在输出中。
