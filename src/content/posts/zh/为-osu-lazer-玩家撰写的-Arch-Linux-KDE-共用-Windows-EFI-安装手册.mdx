@@ -3,7 +3,7 @@ title: 为 osu!lazer 玩家撰写的 Arch Linux + KDE + 共用 Windows EFI 安�
 slug: arch-linux-kde-guide
 cover: /images/posts/arch-linux-kde-guide/cover.jpeg
 top_img: /images/posts/arch-linux-kde-guide/top_img.jpeg
-date: 2025-05-31 12:00
+date: 2025-06-01 17:19
 description: 适用于：已存在 Windows 系统、EFI 分区保留、使用 LVM 安装 Arch Linux 并使用 KDE 桌面环境
 ---
 
@@ -39,6 +39,9 @@ import Note from '@/components/markdown/Note.svelte'
 ```bash
 加载LVM模块
 modprobe dm-mod
+
+查看磁盘信息
+lsblk
 
 创建物理卷
 pvcreate /dev/nvme0n1p2
@@ -99,7 +102,7 @@ swapon /dev/archvg/swap
 ## 📦 第三步：安装基本系统
 
 ```bash
-pacstrap -K /mnt base linux linux-firmware sudo vim networkmanager grub efibootmgr lvm2 os-prober
+pacstrap -K /mnt base linux linux-firmware sudo vim networkmanager nano grub efibootmgr lvm2 os-prober
 ```
 
 ---
@@ -124,6 +127,11 @@ arch-chroot /mnt
 
 启动网络管理器
 systemctl enable NetworkManager
+
+自动选择镜像源
+pacman -S reflector
+reflector --country China --protocol https --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
+pacman -Syyu
 
 修改时区
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
@@ -218,30 +226,57 @@ reboot
 ```bash
 sudo pacman -S git base-devel
 
-sudo pacman -S plasma kde-applications xdg-desktop-portal-kde \
-qt5-wayland qt6-wayland sddm sddm-kcm noto-fonts-cjk adobe-source-han-sans-cn-fonts fcitx5-im fcitx5-chinese-addons fcitx5-configtool wqy-zenhei wqy-microhei noto-fonts-extra
+sudo pacman -S plasma kde-applications xdg-desktop-portal-kde qt5-wayland qt6-wayland sddm sddm-kcm noto-fonts-cjk adobe-source-han-sans-cn-fonts fcitx5-im fcitx5-chinese-addons fcitx5-configtool wqy-zenhei wqy-microhei noto-fonts-extra
 ```
 
 #### 安装显卡驱动(没有的显卡就不要安装！)
+
+<Note type="warning" style="flat" client:visible>
+启用了集显的话，无论是否使用，也需要把集显的驱动打上！
+</Note>
+
+amd：
+
+```
+sudo pacman -S mesa vulkan-radeon libva-mesa-driver libva-utils
+```
 
 intel：
 
 ```
 intel: 
-sudo pacman -S mesa vulkan-intel libva-intel-driver
+sudo pacman -S mesa vulkan-intel libva-intel-driver libva-utils
 ```
 
 nvidia：
 
-```
-sudo pacman -S nvidia nvidia-utils nvidia-settings
+<Note type="danger" style="flat" client:visible>
+注意！较新的50系显卡需要安装nvidia-open-dkms而不是nvidia或nvidia-dkms！
+</Note>
 
-启用kms（wayland）：
-sudo nano /etc/modprobe.d/nvidia.conf
-写入"options nvidia_drm modeset=1"
+```
+sudo pacman -S nvidia nvidia-utils nvidia-settings nvidia-prime libva-utils
 
 添加内核启动参数：
+sudo nano /etc/default/grub
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nvidia_drm.modeset=1"
+
+检查是否启用了内核模块：
+sudo nano /etc/mkinitcpio.conf
+应该包含以下内容（没有的话添加,注意添加集显模块amdgpu或i915)：
+MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+
+添加nvidia配置文件(启用kms)：
+sudo nano /etc/modprobe.d/nvidia.conf
+添加"options nvidia_drm modeset=1"
+如使用的是nvidia-open-dkms/nvidia-dkms，则需要额外添加以下内容：
+"options nvidia NVreg_OpenRmEnableUnsupportedGpus=1"
+
+SDDM强制x11启动（可选，防止黑屏）：
+sudo nano /etc/sddm.conf
+写入以下内容：
+[General]
+DisplayServer=x11
 ```
 
 更新GRUB/initramfs：
@@ -274,7 +309,7 @@ GDK_BACKEND=wayland
 皮肤(Catppuccin)：
 cd ~/Repos && git clone https://github.com/catppuccin/fcitx5.git
 mkdir -p ~/.local/share/fcitx5/themes/
-bash ./Repos/fcitx5/enable-rounded.sh
+bash ./fcitx5/enable-rounded.sh
 cp -r ./fcitx5/src/* ~/.local/share/fcitx5/themes
 
 或者在这里寻找自己喜欢的皮肤：
@@ -310,7 +345,7 @@ sudo systemctl enable sddm
 
 - 切换 TTY：`Ctrl + Alt + F2 ~ F6`
 - 登录后编辑配置或停用图形服务
-- 禁用 sddm：`sudo systemctl disable sddm` 
+- 禁用 sddm：`sudo systemctl disable sddm`
 
 ---
 
@@ -321,6 +356,18 @@ sudo systemctl enable sddm
 ```
 sudo rmmod hid_uclogic 
 ```
+
+如还是无法识别，则将其添加到BlackList中：
+
+```
+sudo nano /etc/modprobe.d/blacklist-tablet.conf
+# 添加以下内容：
+blacklist wacom
+blacklist hid_uclogic
+sudo reboot
+```
+
+然后重新开启osu!lazer中的数位板检测功能，若还是不行，请自行安装opentabletdriver。
 
 ---
 
@@ -363,7 +410,7 @@ sudo mount -a
 
 ---
 
-## 🔈   优化PipieWire延迟（可选）
+## 🔈 优化PipieWire延迟（可选）
 
 ```
 创建用户级配置文件
@@ -434,13 +481,13 @@ pw-metadata
 
 ---
 
-## 🔊  更近一步的音频设置（可选）
+## 🔊 更近一步的音频设置（可选）
 
-安装 `cpufrequtils` 
+安装 `cpufrequtils`
 
 ```
-sudo pacman -S cpufrequtils
-sudo nano /etc/default/cpufrequtils
+sudo pacman -S cpupower
+sudo cpupower frequency-set -g performance
 ```
 
 切换到performance模式
@@ -520,9 +567,9 @@ osu!lazer的运行文件夹可以在挂载NTFS分区后与windows版的运行文
 
 ---
 
-# 附录：
+# 附录（上述内容无法解决的情况下参考）：
 
-## 😜  添加配置器或数位板支持
+## 😜 添加配置器或数位板支持
 
 用 `lsusb` 找到你的设备：
 
@@ -547,13 +594,13 @@ sudo nano /etc/udev/rules.d/99-myusb.rules
 添加以下内容：
 
 ```
-SUBSYSTEM=="usb", ATTR{idVendor}=="5d3e", ATTR{idProduct}=="fb01", MODE="0666"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="5d3e", ATTRS{idProduct}=="fb01", MODE="0666"
 ```
 
 如果你希望将设备归属于某个特定用户或组，也可以这样写：
 
 ```
-SUBSYSTEM=="usb", ATTR{idVendor}=="5d3e", ATTR{idProduct}=="fb01", MODE="0660", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="5d3e", ATTRS{idProduct}=="fb01", MODE="0660", GROUP="plugdev"
 ```
 
 > ⚠️ `plugdev` 组不一定存在，可用 `id` 查看自己所属的组
@@ -577,7 +624,7 @@ ls -l /dev/bus/usb/001/008
 
 ---
 
-## 😎  添加用户组（可选）
+## 😎 添加用户组（可选）
 
 添加一个新组：
 
@@ -593,7 +640,7 @@ sudo groupadd plugdev
 sudo usermod -aG plugdev XXX
 ```
 
-> 🔺 **注意**：`-aG` 是 “追加到附加组”，不能漏掉，否则会覆盖现有组！
+> 🔺 **注意**：`-aG` 是 "追加到附加组"，不能漏掉，否则会覆盖现有组！
 
 让更改生效：
 
