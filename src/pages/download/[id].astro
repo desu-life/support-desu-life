@@ -4,6 +4,7 @@ import { getCollection, render } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 import Dropdown from "@/components/common/Dropdown.svelte";
 import Drawer from "@/components/common/Drawer.svelte";
+import Seo from '@/components/common/Seo.astro';
 
 export async function getStaticPaths() {
     const firmwares = await getCollection('firmware');
@@ -21,12 +22,10 @@ const { firmware } = Astro.props;
 const { Content } = await render(firmware);
 ---
 
-<head>
-    <title>{firmware.data.label} | Kagami Studio 支持</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-</head>
+<Seo
+  title={`${firmware.data.label}`}
+  description={"Kagami Studio 为您提供 " + firmware.data.label + " 的下载。"}
+/>
 
 <Layout>
     <div class="firmware-content">

@@ -1,15 +1,15 @@
 ---
+import Seo from "@/components/common/Seo.astro";
 import Layout from "@/layouts/default/index.astro";
 import { getCollection } from "astro:content";
 const posts = await getCollection("posts");
 ---
 
-<head>
-  <title>资讯 | Kagami Studio 支持</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width" />
-</head>
+<Seo
+  title="资讯"
+  description="Kagami Studio 为您提供最新的资讯，包括产品发布、活动通知等。"
+  keywords="Kagami Studio, 资讯, 产品发布, 活动通知"
+/>
 
 <Layout>
   <h1 class="posts-title">所有资讯</h1>

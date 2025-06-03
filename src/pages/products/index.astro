@@ -1,15 +1,15 @@
 ---
 import Devices from "@/components/sections/Devices.astro";
 import Layout from "@/layouts/default/index.astro";
+import Seo from "@/components/common/Seo.astro";
 ---
 
-<head>
-    <meta charset="UTF-8" />
-    <title>产品 | Kagami Studio 支持</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-</head>
+<Seo
+  title="产品"
+  description="Kagami Studio 为您提供优质的音游外设产品，包括 Pure64 磁轴键盘、MeowPad 触盘等。"
+  keywords="Kagami Studio, 产品, meowpad, pure64, desu.life, 音游外设, 磁轴键盘, 触盘"
+/>
 
 <Layout>
-    <Devices />
+  <Devices />
 </Layout>

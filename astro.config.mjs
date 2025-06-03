@@ -1,25 +1,36 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
-import vue from '@astrojs/vue';
+import vue from "@astrojs/vue";
 
-import svelte from '@astrojs/svelte';
+import svelte from "@astrojs/svelte";
 
-import icon from 'astro-icon';
+import icon from "astro-icon";
 
-import mdx from '@astrojs/mdx';
+import mdx from "@astrojs/mdx";
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from "@tailwindcss/vite";
+
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://support.desu.life",
   // i18n: {
   //   defaultLocale: 'en',
   //   locales: ['en', 'zh-Hans', 'zh-Hant', 'ja', 'ko'],
   // },
-  integrations: [vue(), svelte(), icon(), mdx()],
+  integrations: [
+    vue(),
+    svelte(),
+    icon(),
+    mdx(),
+    sitemap({
+      
+    }),
+  ],
 
   vite: {
-    plugins: [tailwindcss()]
-  }
+    plugins: [tailwindcss()],
+  },
 });

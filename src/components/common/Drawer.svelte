@@ -46,7 +46,12 @@
   }
 </script>
 
-<button class="drawer-toggle" on:click={() => isOpen = !isOpen}>
+<button 
+  class="drawer-toggle" 
+  on:click={() => isOpen = !isOpen}
+  aria-label="打开菜单"
+  aria-expanded={isOpen}
+>
   <slot name="button-icon" />
 </button>
 

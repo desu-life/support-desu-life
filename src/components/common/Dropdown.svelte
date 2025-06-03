@@ -31,7 +31,9 @@
 
 <div
   class="dropdown"
-  role="listbox"
+  role="combobox"
+  aria-expanded={open}
+  aria-haspopup="listbox"
   tabindex="0"
   on:mouseenter={() => show("hover")}
   on:mouseleave={() => hide("hover")}
@@ -42,6 +44,7 @@
     class="dropdown-trigger dropdown-trigger__{dropdownTrigger}"
     on:click={() => toggle("click")}
     type="button"
+    aria-label="打开下拉菜单"
   >
     <slot name="trigger" />
   </button>
@@ -49,6 +52,7 @@
   {#if open}
     <div
       class="dropdown-menu"
+      role="listbox"
       transition:fade={{ duration: 160 }}
     >
       <slot name="menu" />

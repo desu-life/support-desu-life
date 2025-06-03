@@ -40,7 +40,7 @@ const products = await getCollection("products");
                       ) || product.data.preview[0]
                     : product.data.preview
                 }
-                alt={product.data.title}
+                alt={`${product.data.title} 产品图片`}
                 class="device-img"
                 draggable="false"
                 loading="lazy"

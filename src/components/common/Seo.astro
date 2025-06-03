@@ -1,0 +1,55 @@
+---
+const {
+  title = "Kagami Studio 支持",
+  description = "Kagami Studio 为您提供驱动下载、固件下载、教程、支持等专业便捷的技术支持。",
+  keywords = "Kagami Studio, meowpad, 猫盘, 猫盘固件下载, 配置器下载, pure64, 磁轴键盘, 机械键盘, desu.life",
+  image = "https://support.desu.life/favicon.svg",
+  url = "https://support.desu.life",
+  siteName = "Kagami Studio 支持",
+  locale = "zh-CN",
+  canonical = "https://support.desu.life" + Astro.url.pathname,
+  type = "website",
+  pureTitle = false
+}: {
+  title?: string,
+  description?: string,
+  keywords?: string,
+  image?: string,
+  url?: string,
+  siteName?: string,
+  locale?: string,
+  canonical?: string,
+  type?: "website" | "article" | "product",
+  pureTitle?: boolean,
+} = Astro.props;
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <title>{pureTitle ? title : title + " | " + siteName}</title>
+
+  <meta name="viewport" content="width=device-width" />
+  <meta name="description" content={description} />
+  <meta name="keywords" content={keywords} />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="canonical" href={canonical} />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content={type} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={image.startsWith("http") ? image : url + image} />
+  <meta property="og:url" content={url} />
+  <meta property="og:site_name" content={siteName} />
+  <meta property="og:locale" content={locale} />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image.startsWith("http") ? image : url + image} />
+  <meta name="twitter:url" content={url} />
+
+  <slot />
+</head>

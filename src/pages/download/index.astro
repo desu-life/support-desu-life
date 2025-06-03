@@ -2,18 +2,17 @@
 import Layout from "@/layouts/default/index.astro"
 import DownloadBanner from "@/components/sections/DownloadBanner.astro"
 import SearchFirmware from "@/components/common/SearchFirmware.svelte"
-
+import Seo from "@/components/common/Seo.astro"
 
 import { getCollection } from "astro:content";
 const firmware = await getCollection("firmware");
 ---
 
-<head>
-    <title>下载 | Kagami Studio 支持</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-</head>
+<Seo
+  title="下载"
+  description="Kagami Studio 为您提供固件下载、配置器下载等。"
+  keywords="Kagami Studio, 固件下载, 配置器下载"
+/>
 
 <Layout>
     <div class="download-container">

@@ -1,4 +1,5 @@
 ---
+import Seo from "@/components/common/Seo.astro";
 import Layout from '@/layouts/default/index.astro';
 import { getCollection, render } from 'astro:content';
 
@@ -25,12 +26,12 @@ const { product } = Astro.props;
 const { Content } = await render(product);
 ---
 
-<head>
-    <meta charset="UTF-8" />
-    <title>{product.data.title} | Kagami Studio 支持</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-</head>
+<Seo
+  title={`${product.data.title}`}
+  description={product.data.title + " 是由 Kagami Studio 开发的产品。"}
+  image={product.data.preview instanceof Array ? product.data.preview[0] : product.data.preview}
+  type="product"
+/>
 
 <Layout>
     <div class="product-content">

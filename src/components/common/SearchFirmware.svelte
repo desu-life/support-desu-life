@@ -17,13 +17,15 @@
   let resultCount = $derived(result.length);
 </script>
 
-<div class="search-box">
+<div class="search-box" role="search">
   <input
     type="text"
     placeholder="支持搜索固件名称、设备名称、固件版本"
     bind:value={searchValue}
     class="search__input"
     spellcheck="false"
+    aria-label="搜索固件"
+    role="searchbox"
   />
 </div>
 {#if showResultCount}

@@ -2,7 +2,7 @@
 import Layout from '@/layouts/default/index.astro';
 import { getCollection, render } from 'astro:content';
 import { Icon } from 'astro-icon/components';
-
+import Seo from '@/components/common/Seo.astro';
 
 export async function getStaticPaths() {
     const posts = await getCollection('posts');
@@ -27,12 +27,12 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<head>
-    <meta charset="UTF-8" />
-    <title>{post.data.title} | Kagami Studio 支持</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-</head>
+<Seo
+  title={`${post.data.title}`}
+  description={post.data.description}
+  image={post.data.cover}
+  type="article"
+/>
 
 <Layout>
     <div class="post-header">

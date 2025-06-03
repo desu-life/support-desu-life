@@ -19,6 +19,7 @@ import Dropdown from "@/components/common/Dropdown.svelte";
         class="download-banner__image"
         src={MPCImage}
         alt="MPC 配置器截图"
+        loading="eager"
       />
     </div>
     <!-- 右侧内容 -->
@@ -52,11 +53,11 @@ import Dropdown from "@/components/common/Dropdown.svelte";
           href="https://assets.desu.life/device/app/resources/MeowpadConfiguratorForV2_v1.0.3_windows.msi"
           target="_blank"
         >
-          <Icon name="devicon:windows11" size="24" mode="external" /> Windows
+          <img src="/icons/windows11.svg" alt="Windows Icon" class="download-banner__button-icon" /> Windows
         </a>
         <Dropdown dropdownTrigger="hover" client:load>
           <div slot="trigger" class="download-banner__button">
-            <Icon name="bi:apple" size="24" mode="external" /> MacOS
+            <img src="/icons/apple.svg" alt="MacOS Icon" class="download-banner__button-icon" /> MacOS
           </div>
           <ul slot="menu" class="dropdown-list">
             <a
@@ -71,7 +72,7 @@ import Dropdown from "@/components/common/Dropdown.svelte";
         </Dropdown>
         <Dropdown dropdownTrigger="hover" client:load>
           <div slot="trigger" class="download-banner__button">
-            <Icon name="devicon:linux" size="24" mode="external" /> Linux
+            <img src="/icons/linux.svg" alt="Linux Icon" class="download-banner__button-icon" /> Linux
           </div>
           <ul slot="menu" class="dropdown-list">
             <a
@@ -184,6 +185,10 @@ import Dropdown from "@/components/common/Dropdown.svelte";
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     transition: background 0.2s;
     min-width: 150px;
+  }
+  .download-banner__button-icon {
+    width: 24px;
+    height: 24px;
   }
   .download-banner__button:hover {
     background: #444;

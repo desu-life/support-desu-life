@@ -1,15 +1,14 @@
 ---
 import Layout from '@/layouts/default/index.astro';
 import { Content } from "@/content/data/about.mdx"
-
+import Seo from "@/components/common/Seo.astro";
 ---
 
-<head>
-    <meta charset="UTF-8" />
-    <title>公司介绍 | Kagami Studio 支持</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-</head>
+<Seo
+  title="公司介绍"
+  description="Kagami Studio 是 Neon Prizma 旗下专注于 osu! 与各种音乐游戏相关产品开发的工作室。"
+  keywords="Neon Prizma, Kagami Studio, 公司介绍, 猫盘, pure64, meowpad, desu.life"
+/>
 
 <Layout>
     <div class="about-container">
