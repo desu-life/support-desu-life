@@ -34,6 +34,7 @@
   role="combobox"
   aria-expanded={open}
   aria-haspopup="listbox"
+  aria-controls="dropdown-menu"
   tabindex="0"
   on:mouseenter={() => show("hover")}
   on:mouseleave={() => hide("hover")}
@@ -51,6 +52,7 @@
 
   {#if open}
     <div
+      id="dropdown-menu"
       class="dropdown-menu"
       role="listbox"
       transition:fade={{ duration: 160 }}
