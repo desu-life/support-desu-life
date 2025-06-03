@@ -5,6 +5,7 @@ import { Icon } from 'astro-icon/components';
 import DownloadBanner from '@/components/sections/DownloadBanner.astro';
 import RecentPosts from '@/components/sections/RecentPosts.astro';
 import Devices from '@/components/sections/Devices.astro';
+import { Image } from 'astro:assets';
 ---
 
 <head>
@@ -17,11 +18,11 @@ import Devices from '@/components/sections/Devices.astro';
 <Layout>
 	<div class="index-container" >
 		<div class="search-banner">
-			<img class="banner-img" src={banner.src} alt="banner" />
+			<Image class="banner-img" src={banner} alt="banner" />
 			<div class="banner-content">
 				<h1>欢迎访问 Kagami Studio 支持</h1>
 				<div class="search-box">
-					<Icon name="solar:magnifer-linear" class="icon" />
+					<Icon name="solar:magnifer-linear" class="icon" mode="external" />
 					<form action="/search" method="get">
 						<input type="text" placeholder="搜索帮助内容（例：Pure64）" name="q" />
 					</form>

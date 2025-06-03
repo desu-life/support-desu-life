@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
 import MPCImage from "@/assets/images/MPC.jpeg";
 import Dropdown from "@/components/common/Dropdown.svelte";
 ---
@@ -14,9 +15,9 @@ import Dropdown from "@/components/common/Dropdown.svelte";
   <div class="download-banner__content-row">
     <!-- 左侧图片 -->
     <div class="download-banner__left">
-      <img
+      <Image
         class="download-banner__image"
-        src={MPCImage.src}
+        src={MPCImage}
         alt="MPC 配置器截图"
       />
     </div>
@@ -32,15 +33,15 @@ import Dropdown from "@/components/common/Dropdown.svelte";
       <!-- 特性 -->
       <div class="download-banner__features">
         <div class="download-banner__feature">
-          <Icon name="solar:programming-linear" size="32" />
+          <Icon name="solar:programming-linear" size="32" mode="external" />
           <span>全设备通用</span>
         </div>
         <div class="download-banner__feature">
-          <Icon name="solar:settings-linear" size="32" />
+          <Icon name="solar:settings-linear" size="32" mode="external" />
           <span>高度自定义</span>
         </div>
         <div class="download-banner__feature">
-          <Icon name="solar:keyboard-linear" size="32" />
+          <Icon name="solar:keyboard-linear" size="32" mode="external" />
           <span>Fn层配置</span>
         </div>
       </div>
@@ -51,11 +52,11 @@ import Dropdown from "@/components/common/Dropdown.svelte";
           href="https://assets.desu.life/device/app/resources/MeowpadConfiguratorForV2_v1.0.3_windows.msi"
           target="_blank"
         >
-          <Icon name="devicon:windows11" size="24" /> Windows
+          <Icon name="devicon:windows11" size="24" mode="external" /> Windows
         </a>
         <Dropdown dropdownTrigger="hover" client:load>
           <div slot="trigger" class="download-banner__button">
-            <Icon name="bi:apple" size="24" /> MacOS
+            <Icon name="bi:apple" size="24" mode="external" /> MacOS
           </div>
           <ul slot="menu" class="dropdown-list">
             <a
@@ -70,7 +71,7 @@ import Dropdown from "@/components/common/Dropdown.svelte";
         </Dropdown>
         <Dropdown dropdownTrigger="hover" client:load>
           <div slot="trigger" class="download-banner__button">
-            <Icon name="devicon:linux" size="24" /> Linux
+            <Icon name="devicon:linux" size="24" mode="external" /> Linux
           </div>
           <ul slot="menu" class="dropdown-list">
             <a

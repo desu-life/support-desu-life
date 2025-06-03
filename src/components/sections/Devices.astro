@@ -4,77 +4,120 @@ const products = await getCollection("products");
 ---
 
 <section class="devices-section">
-  <h2 class="devices-title">
-    Kagami Studio 设备
-  </h2>
+  <h2 class="devices-title">Kagami Studio 设备</h2>
   <div class="devices-list">
-    {products.sort((a, b) => b.data.weight - a.data.weight).map(product => (
-      <a href={`/products/${product.data.slug}`} class="device-item">
-        <span class="device-glow"></span>
-        <img src={product.data.preview} alt={product.data.title} class="device-img" draggable="false" />
-        <span class="device-name">{product.data.title}</span>
-      </a>
-    ))}
+    {
+      products
+        .sort((a, b) => b.data.weight - a.data.weight)
+        .map((product) => (
+          <a href={`/products/${product.data.slug}`} class="device-item">
+            <span class="device-glow" />
+            <picture>
+              {Array.isArray(product.data.preview) ? (
+                <>
+                  <source
+                    srcset={product.data.preview.find((src: string) =>
+                      src.endsWith(".webp")
+                    )}
+                    type="image/webp"
+                  />
+                  <source
+                    srcset={product.data.preview.find((src: string) =>
+                      src.endsWith(".png")
+                    )}
+                    type="image/png"
+                  />
+                </>
+              ) : product.data.preview.endsWith(".webp") ? (
+                <source srcset={product.data.preview} type="image/webp" />
+              ) : null}
+
+              <img
+                src={
+                  Array.isArray(product.data.preview)
+                    ? product.data.preview.find((src: string) =>
+                        src.endsWith(".png")
+                      ) || product.data.preview[0]
+                    : product.data.preview
+                }
+                alt={product.data.title}
+                class="device-img"
+                draggable="false"
+                loading="lazy"
+                height="80"
+              />
+            </picture>
+            <span class="device-name">{product.data.title}</span>
+          </a>
+        ))
+    }
   </div>
 </section>
 
 <style>
-.devices-section {
-  background: #181818;
-  padding: 64px 0;
-}
-.devices-title {
-  text-align: center;
-  color: #fff;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 4rem;
-}
-.devices-list {
-  display: flex;
-  justify-content: center;
-  gap: 72px;
-  flex-wrap: wrap;
-}
-.device-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 160px;
-  text-decoration: none;
-  transition: transform 0.2s;
-  z-index: 1;
-}
-.device-item:hover {
-  transform: translateY(-8px) scale(1.06);
-}
-.device-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 120px;
-  height: 120px;
-  background: radial-gradient(circle, rgba(116, 239, 255, 0.274) 0%, rgba(0,0,0,0) 70%);
-  border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0.7);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 0;
-}
-.device-item:hover .device-glow {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1.1);
-}
-.device-img {
-  height: 80px;
-  margin-bottom: 16px;
-  z-index: 1;
-}
-.device-name {
-  color: #fff;
-  font-size: 1rem;
-  z-index: 1;
-}
+  .devices-section {
+    background: #181818;
+    padding: 64px 0;
+  }
+  .devices-title {
+    text-align: center;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 4rem;
+  }
+  .devices-list {
+    display: flex;
+    justify-content: center;
+    gap: 72px;
+    flex-wrap: wrap;
+  }
+  .device-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 160px;
+    text-decoration: none;
+    transition: transform 0.2s;
+    z-index: 1;
+  }
+  .device-item:hover {
+    transform: translateY(-8px) scale(1.06);
+  }
+  .device-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(
+      circle,
+      rgba(116, 239, 255, 0.274) 0%,
+      rgba(0, 0, 0, 0) 70%
+    );
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.3s,
+      transform 0.3s;
+    z-index: 0;
+  }
+  .device-item:hover .device-glow {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  .device-img {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 16px;
+    z-index: 1;
+  }
+  .device-name {
+    color: #fff;
+    font-size: 1rem;
+    z-index: 1;
+  }
 </style>

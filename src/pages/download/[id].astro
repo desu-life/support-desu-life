@@ -32,7 +32,7 @@ const { Content } = await render(firmware);
     <div class="firmware-content">
         <div class="back-button">
             <a href="/download">
-                <Icon name="solar:arrow-left-linear" />
+                <Icon name="solar:arrow-left-linear" mode="external" />
                 返回下载页面
             </a>
         </div>
@@ -46,7 +46,7 @@ const { Content } = await render(firmware);
         </div>
         <div class="firmware-download">
             <a href={firmware.data.download_url} class="firmware-download__button">
-                <Icon name="solar:download-linear" />
+                <Icon name="solar:download-linear" mode="external" />
                 下载固件
             </a>
             <div class="firmware-download__size-and-check">
@@ -58,7 +58,7 @@ const { Content } = await render(firmware);
                         <div class="firmware-download__dropdown">
                             <Dropdown dropdownTrigger="hover" client:load>
                                 <span slot="trigger" class="firmware-download__trigger">
-                                    <Icon name="solar:info-circle-linear" /> 文件校验
+                                    <Icon name="solar:info-circle-linear" mode="external" /> 文件校验
                                 </span>
                                 <div slot="menu" class="firmware-download__checksum">
                                     {Object.entries(firmware.data.checksum).map(([key, value]) => (
@@ -73,7 +73,7 @@ const { Content } = await render(firmware);
                         <div class="firmware-download__drawer">
                             <Drawer direction="bottom" closeOnOverlayClick showCloseButton client:load>
                                 <div slot="button-icon" class="firmware-download__drawer-btn">
-                                    <Icon name="solar:info-circle-linear" class="icon" />
+                                    <Icon name="solar:info-circle-linear" class="icon" mode="external" />
                                     <span>文件校验</span>
                                 </div>
                                 <div>文件校验</div>

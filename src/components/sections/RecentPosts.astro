@@ -23,7 +23,7 @@ const posts = await getCollection("posts");
             <li>
               <a href={`/posts/${post.data.slug || (post.id.split('/').pop()?.split('.')[0] ?? post.id)}`} class="recent-posts__item">
                 <div class="recent-post__cover">
-                  <img src={post.data.cover} alt={post.data.title} />
+                  <img src={post.data.cover} alt={post.data.title} width="200" height="120" />
                 </div>
                 <div class="recent-post__content">
                   <p class="recent-post__date">{post.data.date}</p>

@@ -9,9 +9,13 @@ import { Icon } from "astro-icon/components";
   <div class="head-container">
     <div class="header-top">
       <div class="logo-title">
-        <Logo class="logo" />
+        <a href="/">
+          <Logo class="logo" />
+        </a>
         <span class="divider-vertical"></span>
-        <span class="title">支持</span>
+        <a href="/">
+          <span class="title">支持</span>
+        </a>
       </div>
       <div class="right-content show-on-mobile">
         <Drawer
@@ -250,6 +254,9 @@ import { Icon } from "astro-icon/components";
     }
   }
   @media (max-width: 767px) {
+    .head-container {
+      padding: 16px 8px;
+    }
     .nav-bar {
       display: none;
     }
