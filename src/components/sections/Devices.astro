@@ -1,10 +1,15 @@
 ---
 import { getCollection } from "astro:content";
 const products = await getCollection("products");
+const { isH1 = false } = Astro.props;
 ---
 
 <section class="devices-section">
-  <h2 class="devices-title">Kagami Studio 设备</h2>
+  {isH1 ? (
+    <h1 class="devices-title">Kagami Studio 设备</h1>
+  ) : (
+    <h2 class="devices-title">Kagami Studio 设备</h2>
+  )}
   <div class="devices-list">
     {
       products
