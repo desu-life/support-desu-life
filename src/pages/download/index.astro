@@ -16,6 +16,7 @@ const firmware = await getCollection("firmware");
 
 <Layout>
     <div class="download-container">
+        <h1>Kagami Studio 资源下载</h1>
         <div class="download-container__card">
             <DownloadBanner />
         </div>
@@ -40,6 +41,11 @@ const firmware = await getCollection("firmware");
         display: flex;
         flex-direction: column;
         gap: 2rem;
+    }
+    .download-container h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        text-align: center;
     }
     .download-container__card {
         border-radius: 1rem;
