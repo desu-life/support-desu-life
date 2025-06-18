@@ -6,6 +6,27 @@ import Seo from "@/components/common/Seo.astro"
 
 import { getCollection } from "astro:content";
 const firmware = await getCollection("firmware");
+const response = await fetch("https://assets.desu.life/device/firmware/device_versions.json")
+const data = await response.json()
+
+const firmwareList = firmware.map((item) => {
+    if (item.data.local) {
+        return {
+            id: item.id,
+            label: item.data.label,
+            device: item.data.device,
+            version: item.data.version,
+        }
+    } else {
+        const firmwareData = data.find((v: any) => v.device === item.data.device);
+        return {
+            id: item.id,
+            label: firmwareData?.label ?? item.data.label,
+            device: item.data.device,
+            version: firmwareData?.versions[0]?.version ?? item.data.version,
+        }
+    }
+})
 ---
 
 <Seo
@@ -23,12 +44,7 @@ const firmware = await getCollection("firmware");
         <div class="download-container__card">
             <h2>固件下载</h2>
             <div class="search-firmware">
-                <SearchFirmware data={firmware.map((item) => ({
-                    id: item.id,
-                    label: item.data.label,
-                    device: item.data.device,
-                    version: item.data.version,
-                }))} client:load />
+                <SearchFirmware data={firmwareList} client:load />
             </div>
         </div>
     </div>

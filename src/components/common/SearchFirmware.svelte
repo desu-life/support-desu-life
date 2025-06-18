@@ -42,7 +42,7 @@
             <a href={`/download/${item.id}`}>
               <div class="result-content">
                 <h3 class="result-title">{item.label}</h3>
-                <p class="result-info">设备: {item.device} | 版本: {item.version}</p>
+                <p class="result-info">设备: {item.device} {#if item.version} | 版本: {item.version}{/if}</p>
               </div>
             </a>
           </li>
