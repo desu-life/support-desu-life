@@ -36,9 +36,9 @@ if (!firmware.data.local && firmwareData) {
             information: {
                 date: versionItem.information.date,
                 size: versionItem.information.size,
-                checksum: versionItem.information.checksum
+                checksum: versionItem.information.checksum,
+                download_url: versionItem.information.download_url
             },
-            download_url: versionItem.download_url
         };
     }
 } else {
@@ -50,13 +50,13 @@ if (!firmware.data.local && firmwareData) {
         information: {
             date: item.release_date,
             size: item.size,
-            checksum: item.checksum
+            checksum: item.checksum,
+            download_url: item.download_url
         },
-        download_url: item.download_url
     };
 }
 
-const { label, device, version, information, download_url } = target
+const { label, device, version, information } = target
 
 function getSize(size: number | string): string {
     if (typeof size !== "number") {
@@ -98,7 +98,7 @@ function getSize(size: number | string): string {
             </div>
         </div>
         <div class="firmware-download">
-            <a href={download_url} class="firmware-download__button">
+            <a href={information.download_url} target="_blank" class="firmware-download__button">
                 <Icon name="solar:download-linear" mode="external" />
                 下载固件
             </a>

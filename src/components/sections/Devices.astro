@@ -13,9 +13,12 @@ const { isH1 = false } = Astro.props;
   <div class="devices-list">
     {
       products
-        .sort((a, b) => b.data.weight - a.data.weight)
+        .sort((a, b) => (b.data.weight ?? 0) - (a.data.weight ?? 0))
         .map((product) => (
-          <a href={`/products/${product.data.slug}`} class="device-item">
+          <a
+            href={`/products/${product.data.slug ?? (product.id.split('/').pop()?.split('.')[0] ?? product.id)}`}
+            class="device-item"
+          >
             <span class="device-glow" />
             <picture>
               {Array.isArray(product.data.preview) ? (
@@ -72,10 +75,28 @@ const { isH1 = false } = Astro.props;
     margin-bottom: 4rem;
   }
   .devices-list {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 72px;
-    flex-wrap: wrap;
+    justify-items: center;
+    align-items: start;
+    width: min(70vw, 1200px);
+    margin: 0 auto;
+  }
+  @media (max-width: 1200px) {
+    .devices-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 900px) {
+    .devices-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 600px) {
+    .devices-list {
+      grid-template-columns: 1fr;
+    }
   }
   .device-item {
     position: relative;

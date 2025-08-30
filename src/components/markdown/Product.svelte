@@ -38,7 +38,7 @@
     .product-swiper {
         width: min(30vw, 1000px);
         aspect-ratio: 16/9;
-        max-height: 300px;
+        /* max-height: 300px; */
         overflow: hidden;
     }
     .product-container {
