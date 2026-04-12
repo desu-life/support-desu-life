@@ -1,7 +1,8 @@
 ---
-import Logo from "@/assets/images/desulife-logo-typography.svg"
+import IconLogo from "@/assets/images/IconLogo.astro"
 import Dropdown from "@/components/common/Dropdown.svelte"
 import Drawer from "@/components/common/Drawer.svelte"
+import Theme from "@/components/common/Theme.svelte"
 import { Icon } from "astro-icon/components"
 ---
 
@@ -10,37 +11,40 @@ import { Icon } from "astro-icon/components"
     <div class="header-top">
       <div class="logo-title">
         <a href="/" aria-label="返回首页">
-          <Logo class="logo" />
+          <IconLogo class="logo" />
         </a>
         <span class="divider-vertical"></span>
         <a href="/" aria-label="支持中心">
           <span class="title">支持</span>
         </a>
       </div>
-      <div class="right-content show-on-mobile">
-        <Drawer client:load direction="right" closeOnOverlayClick={true} showCloseButton={true}>
-          <Icon slot="button-icon" name="solar:hamburger-menu-linear" class="icon" />
-          <div class="drawer-content">
-            <ul class="drawer-menu">
-              <li><a href="https://desu.life" target="_blank">官网</a></li>
-              <li><a href="/">支持主页</a></li>
-              <li><a href="/posts">资讯</a></li>
-              <li><a href="/products">产品</a></li>
-              <ul>
-                <li><a href="/products/meowpad-v3">Meowpad V3</a></li>
-                <li><a href="/products/pure64">Pure64</a></li>
-                <li><a href="/products/meowpad-v2-se">Meowpad V2 SE</a></li>
-                <li><a href="/products/meowpad-v2">Meowpad V2</a></li>
-                <li><a href="/products/meowpad-v1">Meowpad V1</a></li>
+      <div class="right-content">
+        <Theme client:load />
+        <div class="show-on-mobile">
+          <Drawer client:load direction="right" closeOnOverlayClick={true} showCloseButton={true}>
+            <Icon slot="button-icon" name="solar:hamburger-menu-linear" class="icon" />
+            <div class="drawer-content">
+              <ul class="drawer-menu">
+                <li><a href="https://desu.life" target="_blank">官网</a></li>
+                <li><a href="/">支持主页</a></li>
+                <li><a href="/posts">资讯</a></li>
+                <li><a href="/products">产品</a></li>
+                <ul>
+                  <li><a href="/products/meowpad-v3">Meowpad V3</a></li>
+                  <li><a href="/products/pure64">Pure64</a></li>
+                  <li><a href="/products/meowpad-v2-se">Meowpad V2 SE</a></li>
+                  <li><a href="/products/meowpad-v2">Meowpad V2</a></li>
+                  <li><a href="/products/meowpad-v1">Meowpad V1</a></li>
+                </ul>
+                <li><a href="/download">下载</a></li>
+                <!-- <li><a href="/service">申请售后</a></li>
+                <li><a href="/service/progress">服务进度</a></li>
+                <li><a href="/query">真伪查询</a></li> -->
+                <li><a href="/contact">联系我们</a></li>
               </ul>
-              <li><a href="/download">下载</a></li>
-              <!-- <li><a href="/service">申请售后</a></li>
-              <li><a href="/service/progress">服务进度</a></li>
-              <li><a href="/query">真伪查询</a></li> -->
-              <li><a href="/contact">联系我们</a></li>
-            </ul>
-          </div>
-        </Drawer>
+            </div>
+          </Drawer>
+        </div>
       </div>
     </div>
     <span class="divider-horizontal"></span>
@@ -53,11 +57,11 @@ import { Icon } from "astro-icon/components"
           <Dropdown dropdownTrigger="hover" client:load>
             <a href="/products" slot="trigger">产品</a>
             <ul slot="menu" class="dropdown-list">
-              <a href="/products/meowpad-v3"><li>Meowpad V3</li></a>
-              <a href="/products/pure64"><li>Pure64</li></a>
-              <a href="/products/meowpad-v2-se"><li>Meowpad V2 SE</li></a>
-              <a href="/products/meowpad-v2"><li>Meowpad V2</li></a>
-              <a href="/products/meowpad-v1"><li>Meowpad V1</li></a>
+              <li><a href="/products/meowpad-v3">Meowpad V3</a></li>
+              <li><a href="/products/pure64">Pure64</a></li>
+              <li><a href="/products/meowpad-v2-se">Meowpad V2 SE</a></li>
+              <li><a href="/products/meowpad-v2">Meowpad V2</a></li>
+              <li><a href="/products/meowpad-v1">Meowpad V1</a></li>
             </ul>
           </Dropdown>
         </li>
@@ -156,23 +160,24 @@ import { Icon } from "astro-icon/components"
     text-decoration: none;
   }
   .dropdown-list li {
+    color: var(--color-text);
+    background: var(--color-background);
+    font-size: 14px;
     padding: 8px 12px;
     border-radius: 6px;
     transition: background 0.2s;
   }
-  .dropdown-list a:hover li {
-    background: #2a2a2a;
+  .dropdown-list li:hover {
+    background: var(--color-background-secondary);
     border-radius: 6px;
     cursor: pointer;
   }
+  /* 为了匹配原始行为（a:hover 不变色） */
   .dropdown-list a:hover {
-    color: var(--color-primary);
-  }
-  .dropdown-list li {
-    color: var(--color-text);
-    font-size: 14px;
+    color: inherit;
   }
   .right-content {
+    display: flex;
     margin-left: auto;
   }
   .menu-button {
@@ -225,7 +230,7 @@ import { Icon } from "astro-icon/components"
     display: block;
     transition: color 0.2s;
   }
-  .drawer-menu a:hover {
+  .drawer-menu li:hover a {
     color: var(--color-primary);
   }
   .drawer-menu ul {

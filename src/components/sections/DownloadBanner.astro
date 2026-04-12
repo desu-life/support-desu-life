@@ -97,7 +97,7 @@ const downloadUrl = {
     font-size: 2rem;
     font-weight: 800;
     margin: 0 0 0.5rem 0;
-    color: #fff;
+    color: var(--color-text);
     letter-spacing: 1px;
   }
   .download-banner__subtitle {
@@ -137,11 +137,12 @@ const downloadUrl = {
     font-weight: bold;
     margin-bottom: 10px;
     text-align: left;
+    color: var(--color-text);
   }
   .download-banner__desc {
     font-size: 0.98rem;
     line-height: 1.8;
-    color: #eee;
+    color: var(--color-text-secondary);
   }
   .download-banner__features {
     display: flex;
@@ -154,6 +155,7 @@ const downloadUrl = {
     align-items: center;
     gap: 6px;
     font-size: 0.92rem;
+    color: var(--color-text);
   }
   .download-banner__buttons {
     display: flex;
@@ -189,7 +191,7 @@ const downloadUrl = {
     list-style: none;
     display: flex;
     flex-direction: column;
-    background: var(--color-background-secondary, #242424);
+    background: var(--color-background, #242424);
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     min-width: 150px;
@@ -214,7 +216,7 @@ const downloadUrl = {
     border-bottom: none;
   }
   .dropdown-list li:hover {
-    background: var(--color-background-hover, #444);
+    background: var(--color-background-secondary, #444);
   }
   /* 原先<li>在<a>里时，这个样式未生效。修正后为匹配以往行为进行修正。 */
   /* .dropdown-list li:hover a {
@@ -268,6 +270,7 @@ const downloadUrl = {
     }
     .download-banner__subtitle {
       font-size: 0.85rem;
+      color: var(--color-text-secondary);
     }
     .download-banner__content-row {
       gap: 1rem;
